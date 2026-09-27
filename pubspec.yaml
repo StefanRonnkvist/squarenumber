@@ -1,0 +1,45 @@
+name: squarenumber
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.53+54
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.5.0
+  package_info_plus: ^10.2.1
+  shared_preferences: ^2.5.3
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  msix: ^3.16.13
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/play_store_512.png
+
+msix_config:
+  display_name: SquareNumber
+  publisher_display_name: SquareNumber
+  identity_name: com.stefanronnkvist.paid.squarenumber
+  msix_version: 0.1.53.54
+  publisher: CN=SquareNumber
+  sign_msix: false
+
+
+
+
+
+
+
+
+
+
+
+
+

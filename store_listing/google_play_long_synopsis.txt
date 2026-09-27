@@ -1,0 +1,15 @@
+Square Number is a focused falling-number puzzle where every placement matters. Guide the active square across a compact five-column board, create matches, and keep the stack below the top border.
+
+Clear the board in two ways:
+- Connect 2 or more equal squares at an edge or corner.
+- Build an orthogonally connected chain of 3 or more unique consecutive values. Chains can turn corners, but values cannot repeat.
+
+Every clear scores the sum of its values multiplied by the number of squares removed. When cleared squares make the stack fall into another match, the cascade multiplier climbs until the next square appears.
+
+The pressure rises with your score. Effective fall speed increases every 500 points, up to 1.50x, turning careful setup into quick decisions as each run develops.
+
+Choose a base speed and generated number range, then play in system, light, or dark theme. Drag the active square sideways or down, pause when you need a break, or start a fresh run at any time.
+
+Square Number saves a non-empty board when the app moves to the background and restores it in a paused state on your next launch. Your highest score and 10 best completed runs stay on your device, while a qualifying current run appears in the list as you play.
+
+Return to the same stack, chase a new best, and look for the cascade that changes the run.

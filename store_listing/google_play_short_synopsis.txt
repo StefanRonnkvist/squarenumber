@@ -1,0 +1,1 @@
+Guide falling numbers into matches and keep the stack below the top.
