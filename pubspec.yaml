@@ -1,7 +1,7 @@
 name: squarenumber
 description: "A new Flutter project."
 publish_to: 'none'
-version: 0.1.53+54
+version: 0.1.54+55
 
 environment:
   sdk: ^3.12.0
@@ -27,7 +27,7 @@ msix_config:
   display_name: SquareNumber
   publisher_display_name: SquareNumber
   identity_name: com.stefanronnkvist.paid.squarenumber
-  msix_version: 0.1.53.54
+  msix_version: 0.1.54.55
   publisher: CN=SquareNumber
   sign_msix: false
 
