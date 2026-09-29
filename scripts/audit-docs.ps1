@@ -13,6 +13,11 @@ param(
     drift silently: the app keeps building while the Information tab and the
     feedback diagnostics report the wrong build.
 
+    Gameplay constants (board width, speed range, speed step, history size) live
+    in lib/app/main_app.dart and are documented in README.md and the Help tab.
+    Those are read from the source rather than repeated here, so retuning the
+    game flags stale documentation instead of silently diverging.
+
     This script fails when those sources disagree, when the store listing breaks
     the Google Play length limits, or when README links point at files that do
     not exist.
@@ -79,6 +84,9 @@ $shortSynopsis = Get-FileText 'store_listing/google_play_short_synopsis.txt'
 $longSynopsis = Get-FileText 'store_listing/google_play_long_synopsis.txt'
 $helpSource = Get-FileText 'lib/features/settings/widgets/settings_tab.dart'
 $versionTest = Get-FileText 'test/information_versions_test.dart'
+$helpTest = Get-FileText 'test/help_tab_test.dart'
+$appSource = Get-FileText 'lib/app/main_app.dart'
+$tasksSource = Get-FileText '.vscode/tasks.json'
 
 if ($failures.Count -gt 0) {
     foreach ($failure in $failures) { Write-Host $failure -ForegroundColor Red }
@@ -89,7 +97,6 @@ if ($failures.Count -gt 0) {
 
 $pubspecVersion = $null
 $msixVersion = $null
-$packageName = $null
 
 if ($pubspec -match '(?m)^version:\s*([0-9]+\.[0-9]+\.[0-9]+)\+([0-9]+)\s*$') {
     $pubspecVersion = $Matches[1]
@@ -177,20 +184,87 @@ if ($longLength -gt 4000) {
     Add-Failure "Long synopsis is $longLength characters; Google Play allows 4000"
 }
 
-# --- Help tab documents the rules the code enforces -------------------------
+# --- Gameplay constants are read from the source, not repeated here ---------
 
-Assert-Match $helpSource 'Move the active square' 'Help tab is missing an entry' 'settings_tab.dart'
-Assert-Match $helpSource 'Make a clear' 'Help tab is missing an entry' 'settings_tab.dart'
-Assert-Match $helpSource 'Tune the game' 'Help tab is missing an entry' 'settings_tab.dart'
-Assert-Match $helpSource 'five-column' 'Help tab should name the board size' 'settings_tab.dart'
-Assert-Match $helpSource '1\.50x' 'Help tab should state the speed cap' 'settings_tab.dart'
-Assert-Match $helpSource '500 points' 'Help tab should state the speed step' 'settings_tab.dart'
+# Every Help tab entry that a player relies on, plus the facts the docs state
+# in prose. Retuning the game in main_app.dart must not leave stale copy.
+$helpEntries = @(
+    'Move the active square',
+    'Make a clear',
+    'Score and build cascades',
+    'Survive the rising pace',
+    'Pause, restore, and restart',
+    'Track your scores',
+    'Tune the game',
+    'Play anywhere',
+    'Get help and send feedback'
+)
+foreach ($entry in $helpEntries) {
+    Assert-Match $helpSource ([regex]::Escape("title: Text('$entry')")) "Help tab entry '$entry' is missing" 'settings_tab.dart'
+}
+
+# The Help tab is the in-app source of truth, so its test should still assert
+# the full set of entries rather than a hand-picked few.
+foreach ($entry in $helpEntries) {
+    Assert-Match $helpTest ([regex]::Escape($entry)) "Help tab test does not cover '$entry'" 'test/help_tab_test.dart'
+}
+
+function Get-NumericConstant {
+    param(
+        [string]$Name,
+        [string]$Source
+    )
+
+    $script:checks++
+    $pattern = "static\s+const\s+(?:int|double)\s+$Name\s*=\s*([0-9.]+)"
+    if ($Source -match $pattern) {
+        return $Matches[1]
+    }
+    Add-Failure "main_app.dart : could not read constant $Name"
+    return $null
+}
+
+$columns = Get-NumericConstant '_fixedColumnsAcross' $appSource
+$minSpeed = Get-NumericConstant '_minSpeed' $appSource
+$maxSpeed = Get-NumericConstant '_maxSpeed' $appSource
+$speedStep = Get-NumericConstant '_speedStep' $appSource
+$pointsPerStep = Get-NumericConstant '_pointsPerSpeedStep' $appSource
+$maxHistory = Get-NumericConstant '_maxScoreHistoryEntries' $appSource
+
+if ($columns) {
+    # Accept the digit or the spelled-out width, and either hyphenated or spaced.
+    $columnWords = @{ 5 = 'five|5'; 6 = 'six|6'; 7 = 'seven|7'; 8 = 'eight|8' }
+    $columnAlt = if ($columnWords.ContainsKey([int]$columns)) { $columnWords[[int]$columns] } else { [regex]::Escape("$columns") }
+    Assert-Match $readme "($columnAlt)[- ]column" "README should state the board width ($columns)" 'README.md'
+    Assert-Match $readme 'top 10' 'README should state the top 10 history' 'README.md'
+    Assert-Match $helpSource "($columnAlt)[- ]column" "Help tab should name the board width ($columns)" 'settings_tab.dart'
+}
+if ($maxSpeed -and $minSpeed -and $speedStep -and $pointsPerStep) {
+    $speedCap = '{0:0.00}' -f [double]$maxSpeed
+    $speedFloor = '{0:0.00}' -f [double]$minSpeed
+    $stepLabel = '{0:0.00}' -f [double]$speedStep
+    Assert-Match $readme ([regex]::Escape("$speedFloor")) "README should state the minimum speed ($speedFloor)" 'README.md'
+    Assert-Match $readme ([regex]::Escape("$speedCap")) "README should state the speed cap ($speedCap)" 'README.md'
+    Assert-Match $readme ([regex]::Escape("$pointsPerStep points")) "README should state the speed step ($pointsPerStep points)" 'README.md'
+    Assert-Match $helpSource ([regex]::Escape("$speedCap")) "Help tab should state the speed cap ($speedCap)" 'settings_tab.dart'
+    Assert-Match $helpSource ([regex]::Escape("$pointsPerStep points")) "Help tab should state the speed step ($pointsPerStep points)" 'settings_tab.dart'
+}
+if ($maxHistory) {
+    Assert-Match $longSynopsis ([regex]::Escape("$maxHistory best completed runs")) "Long synopsis should state the $maxHistory best runs" 'google_play_long_synopsis.txt'
+}
+
+# The audit must not be wired to a script that does not exist.
+$script:checks++
+if ($tasksSource -notmatch [regex]::Escape('scripts/audit-docs.ps1')) {
+    Add-Failure 'tasks.json should run scripts/audit-docs.ps1 as part of the release task'
+}
 
 # --- README links resolve ---------------------------------------------------
 
-$checks++
-foreach ($match in [regex]::Matches($readme, '\]\((?!https?:)([^)#]+)\)')) {
+# README is written from the repository root, so links are root-relative.
+foreach ($match in [regex]::Matches($readme, '\]\((?!https?:|mailto:)([^)#]+)\)')) {
     $link = $match.Groups[1].Value
+    $script:checks++
     $linkPath = Join-Path $root $link
     if (-not (Test-Path $linkPath)) {
         Add-Failure "README.md links to '$link' but that path does not exist"
@@ -203,6 +277,7 @@ if (-not $Quiet) {
     Write-Host "Version:    $pubspecVersion+$pubspecBuild (MSIX $msixVersion)"
     Write-Host "Short:      $shortLength/80 characters"
     Write-Host "Long:       $longLength/4000 characters"
+    Write-Host "Rules:      $columns columns, $speedFloor-$speedCap speed, +$stepLabel per $pointsPerStep points, top $maxHistory"
     Write-Host "Checks:     $checks"
 }
 

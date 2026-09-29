@@ -32,6 +32,7 @@ void main() {
     expect(find.text('Move the active square'), findsOneWidget);
     expect(find.text('Make a clear'), findsOneWidget);
     expect(find.text('Score and build cascades'), findsOneWidget);
+    expect(find.text('Survive the rising pace'), findsOneWidget);
 
     await tester.dragUntilVisible(
       find.text('Track your scores'),
