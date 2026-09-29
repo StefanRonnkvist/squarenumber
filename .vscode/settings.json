@@ -3,7 +3,6 @@
   "java.configuration.updateBuildConfiguration": "automatic",
   "java.import.gradle.enabled": true,
   "java.import.gradle.wrapper.enabled": true,
-  "java.import.gradle.version": "9.1.0",
   "java.import.gradle.java.home": "C:\\Users\\stefa\\.jdks\\jdk-17.0.20+8",
   "java.jdt.ls.java.home": "C:/Program Files/Android/Android Studio/jbr",
   "gradle.java.home": "C:/Program Files/Android/Android Studio/jbr",

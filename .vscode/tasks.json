@@ -7,7 +7,7 @@
       "dependsOn": [
         "Pub Update All",
         "Flutter: Version Bump",
-        "Build All Release Targets",
+        "Build All Release Targets"
       ],
       "group": "build",
       "problemMatcher": []
@@ -19,7 +19,7 @@
         "flutter: pub upgrade",
         "Flutter: Pub Upgrade Major Versions",
         "Flutter: Pub Outdated",
-        "Flutter: Pub Get",
+        "Flutter: Pub Get"
       ],
       "group": "build",
       "problemMatcher": []
@@ -88,7 +88,7 @@
       "type": "shell",
       "command": "pwsh",
       "dependsOn": [
-      "Flutter: Fix Apple Ephemeral Packages",
+        "Flutter: Fix Apple Ephemeral Packages"
       ],
       "args": [
         "-NoProfile",
@@ -108,7 +108,7 @@
       "type": "shell",
       "command": "flutter build apk --release",
       "dependsOn": [
-      "Flutter: Fix Apple Ephemeral Packages",
+        "Flutter: Fix Apple Ephemeral Packages"
       ],
       "group": "build",
       "presentation": {
@@ -197,6 +197,6 @@
       ],
       "group": "build",
       "problemMatcher": []
-    },
+    }
   ]
 }
