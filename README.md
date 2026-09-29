@@ -130,7 +130,7 @@ android/gradlew.bat :app:signingReport
 - `lib/contact/submissions_csv_page.dart`: hosted-submission viewer used by the Information tab
 - `lib/app/app_metadata.dart`: version constants surfaced in diagnostics and the Information tab
 - `store_listing/`: Google Play listing copy
-- `scripts/`: release build, version bump, and cleanup helper scripts
+- `scripts/`: release build, version bump, docs audit, and cleanup helper scripts
 - `tool/`: Android release build and dependency snapshot helpers
 - `test/`: unit and widget tests for gameplay, persistence, and responsive layout
 - `android/`, `ios/`, `web/`, `windows/`, `linux/`, `macos/`: platform targets
@@ -145,6 +145,22 @@ android/gradlew.bat :app:signingReport
 | Android package name | `com.stefanronnkvist.paid.squarenumber` |
 
 The Information tab renders the AAB and MSIX versions from `lib/app/app_metadata.dart`. `scripts/bump-version.ps1` updates `pubspec.yaml`, `android/local.properties`, and `lib/app/app_metadata.dart` together, so run it instead of editing version numbers by hand.
+
+## Documentation Audit
+
+`scripts/audit-docs.ps1` verifies that the shipped documentation still matches the app:
+
+- `pubspec.yaml`, `lib/app/app_metadata.dart`, and the MSIX version agree
+- README's version table and the Information tab test use the current version
+- The store listing stays within Google Play's 80-character short and 4000-character long limits
+- The Help tab still documents the rules the game enforces
+- Every relative link in README resolves to a real file
+
+```powershell
+pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/audit-docs.ps1
+```
+
+It exits non-zero with a list of problems, and runs as part of the `Google Store` VS Code task before any release build. Run `scripts/bump-version.ps1` first when releasing; it updates every version source together.
 
 ## License
 

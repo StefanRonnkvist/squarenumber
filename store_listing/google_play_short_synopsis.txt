@@ -1,1 +1,1 @@
-Guide falling numbers into matches, chain cascades, and keep the stack below the top.
+Match falling numbers, chain cascades, and keep the stack below the top.
