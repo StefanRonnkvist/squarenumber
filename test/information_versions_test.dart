@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:squarenumber/app/app_metadata.dart';
 import 'package:squarenumber/features/settings/widgets/settings_tab.dart';
 
 void main() {
@@ -33,8 +34,8 @@ void main() {
     await tester.pump(kTabScrollDuration);
 
     expect(find.text('AAB version'), findsOneWidget);
-    expect(find.text('0.1.54+55'), findsOneWidget);
+    expect(find.text(appAabVersion), findsOneWidget);
     expect(find.text('MSIX version'), findsOneWidget);
-    expect(find.text('0.1.54.55'), findsOneWidget);
+    expect(find.text(appMsixVersion), findsOneWidget);
   });
 }

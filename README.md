@@ -160,7 +160,16 @@ The Information tab renders the AAB and MSIX versions from `lib/app/app_metadata
 pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/audit-docs.ps1
 ```
 
-It exits non-zero with a list of problems, and runs as part of the `Google Store` VS Code task before any release build. Run `scripts/bump-version.ps1` first when releasing; it updates every version source together.
+It exits non-zero with a list of problems, and runs as part of the `Google Store` VS Code task before any release build.
+
+### Release flow
+
+```powershell
+pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/bump-version.ps1
+pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/audit-docs.ps1
+```
+
+`bump-version.ps1` is the only script that writes a version number. It updates `pubspec.yaml`, `android/local.properties`, `lib/app/app_metadata.dart`, and the README version table together, so the audit is green straight after a bump.
 
 ## License
 

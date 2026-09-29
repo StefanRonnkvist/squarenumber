@@ -20,6 +20,8 @@ $minor = 0
 $patch = 0
 $build = 0
 $newPatch = 0
+$previousVersion = $null
+$previousBuild = 0
 
 for ($i = 0; $i -lt $lines.Count; $i++) {
     $line = $lines[$i]
@@ -30,6 +32,9 @@ for ($i = 0; $i -lt $lines.Count; $i++) {
         $patch = [int]$Matches[3]
         $build = [int]$Matches[4] + 1
         $newPatch = $patch + $PatchIncrement
+        # Captured before the rewrite so the README can be updated to match.
+        $previousVersion = "$major.$minor.$patch"
+        $previousBuild = [int]$Matches[4]
         $newVersion = "$major.$minor.$newPatch+$build"
         $lines[$i] = "version: $newVersion"
         $versionUpdated = $true
@@ -88,6 +93,24 @@ $androidVersionName = "$major.$minor.$newPatch"
 $androidVersionCode = $build
 $msixVersion = "$major.$minor.$newPatch.$build"
 
+# README quotes the current version in its version table. Rewriting it here
+# keeps `scripts/audit-docs.ps1` green straight after a bump.
+$readmePath = Join-Path $root 'README.md'
+if ((Test-Path $readmePath) -and $previousVersion) {
+    $readme = Get-Content -Path $readmePath -Raw
+    $previousAab = "$previousVersion+$previousBuild"
+    $previousMsix = "$previousVersion.$previousBuild"
+
+    $readme = [regex]::Replace($readme, [regex]::Escape($previousAab), "$androidVersionName+$androidVersionCode")
+    $readme = [regex]::Replace($readme, [regex]::Escape($previousMsix), $msixVersion)
+
+    if ($readme -notmatch [regex]::Escape("$androidVersionName+$androidVersionCode")) {
+        Write-Warning "README.md did not mention $previousAab; run scripts/audit-docs.ps1."
+    }
+
+    Set-Content -Path $readmePath -Value $readme -NoNewline
+}
+
 # lib/app/app_metadata.dart is the source shown in the Information tab and the
 # support diagnostics. Leaving it untouched is what caused it to drift behind
 # pubspec.yaml, so it is regenerated from the same computed values here.
@@ -133,7 +156,7 @@ if (-not $NoGit) {
     if ($LASTEXITCODE -eq 0 -and $gitRoot) {
         $gitStatus = git -C $root status --short
         if ($gitStatus) {
-            git -C $root add pubspec.yaml android/local.properties lib/app/app_metadata.dart
+            git -C $root add pubspec.yaml android/local.properties lib/app/app_metadata.dart README.md
             if ($LASTEXITCODE -eq 0) {
                 git -C $root commit -m "Bump app version to $major.$minor.$newPatch+$build" --no-verify
             }

@@ -162,10 +162,20 @@ if ($metadataPackage) {
     Assert-Match $readme ([regex]::Escape($metadataPackage)) 'Version table' 'README.md'
 }
 
-# --- The version test must assert the same values the app ships --------------
+# --- The version test must not hardcode values that go stale ----------------
 
+# The test should assert against the shared constants. If someone reverts it to
+# a literal, the test would pass while reporting the wrong build, which is the
+# failure this whole script exists to prevent.
 if ($pubspecVersion -and $pubspecBuild) {
-    Assert-Match $versionTest ([regex]::Escape("$pubspecVersion+$pubspecBuild")) 'Version assertion' 'test/information_versions_test.dart'
+    $literalAab = [regex]::Escape("$pubspecVersion+$pubspecBuild")
+    if ($versionTest -match $literalAab) {
+        Add-Failure "test/information_versions_test.dart hardcodes '$pubspecVersion+$pubspecBuild'; assert against appAabVersion instead so a version bump cannot leave it stale"
+        $checks++
+    }
+    $checks++
+    Assert-Match $versionTest 'appAabVersion' 'Version test should assert against appAabVersion' 'test/information_versions_test.dart'
+    Assert-Match $versionTest 'appMsixVersion' 'Version test should assert against appMsixVersion' 'test/information_versions_test.dart'
 }
 
 # --- Store listing limits ---------------------------------------------------
