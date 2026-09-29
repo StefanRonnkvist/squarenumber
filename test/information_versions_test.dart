@@ -33,8 +33,8 @@ void main() {
     await tester.pump(kTabScrollDuration);
 
     expect(find.text('AAB version'), findsOneWidget);
-    expect(find.text('0.1.51+52'), findsOneWidget);
+    expect(find.text('0.1.54+55'), findsOneWidget);
     expect(find.text('MSIX version'), findsOneWidget);
-    expect(find.text('0.1.51.52'), findsOneWidget);
+    expect(find.text('0.1.54.55'), findsOneWidget);
   });
 }

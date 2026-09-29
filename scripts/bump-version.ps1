@@ -88,6 +88,41 @@ $androidVersionName = "$major.$minor.$newPatch"
 $androidVersionCode = $build
 $msixVersion = "$major.$minor.$newPatch.$build"
 
+# lib/app/app_metadata.dart is the source shown in the Information tab and the
+# support diagnostics. Leaving it untouched is what caused it to drift behind
+# pubspec.yaml, so it is regenerated from the same computed values here.
+$metadataPath = Join-Path $root 'lib/app/app_metadata.dart'
+if (Test-Path $metadataPath) {
+    $metadata = Get-Content -Path $metadataPath -Raw
+
+    $replacements = @(
+        @{
+            Pattern = "const\s+String\s+appVersion\s*=\s*'[^']*'"
+            Value   = "const String appVersion = '$androidVersionName'"
+        },
+        @{
+            Pattern = "const\s+String\s+appBuildNumber\s*=\s*'[^']*'"
+            Value   = "const String appBuildNumber = '$androidVersionCode'"
+        },
+        @{
+            Pattern = "const\s+String\s+appMsixVersion\s*=\s*'[^']*'"
+            Value   = "const String appMsixVersion = '$msixVersion'"
+        }
+    )
+
+    foreach ($replacement in $replacements) {
+        $pattern = $replacement.Pattern
+        $value = $replacement.Value
+        $updated = [regex]::Replace($metadata, $pattern, $value)
+        if ($updated -eq $metadata) {
+            Write-Warning "Could not find $value assignment in lib/app/app_metadata.dart; update it manually."
+        }
+        $metadata = $updated
+    }
+
+    Set-Content -Path $metadataPath -Value $metadata -NoNewline
+}
+
 Write-Host "Flutter version: $androidVersionName+$androidVersionCode"
 Write-Host "Android versionName: $androidVersionName"
 Write-Host "Android versionCode: $androidVersionCode"
@@ -98,7 +133,7 @@ if (-not $NoGit) {
     if ($LASTEXITCODE -eq 0 -and $gitRoot) {
         $gitStatus = git -C $root status --short
         if ($gitStatus) {
-            git -C $root add pubspec.yaml android/local.properties
+            git -C $root add pubspec.yaml android/local.properties lib/app/app_metadata.dart
             if ($LASTEXITCODE -eq 0) {
                 git -C $root commit -m "Bump app version to $major.$minor.$newPatch+$build" --no-verify
             }

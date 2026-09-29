@@ -144,7 +144,7 @@ android/gradlew.bat :app:signingReport
 | MSIX package (`msix_config.msix_version`) | `0.1.54.55` |
 | Android package name | `com.stefanronnkvist.paid.squarenumber` |
 
-The Information tab renders the AAB and MSIX versions from `lib/app/app_metadata.dart`. Keep those constants in sync with `pubspec.yaml` when cutting a release (`scripts/bump-version.ps1`).
+The Information tab renders the AAB and MSIX versions from `lib/app/app_metadata.dart`. `scripts/bump-version.ps1` updates `pubspec.yaml`, `android/local.properties`, and `lib/app/app_metadata.dart` together, so run it instead of editing version numbers by hand.
 
 ## License
 
