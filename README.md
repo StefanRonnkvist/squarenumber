@@ -140,8 +140,8 @@ android/gradlew.bat :app:signingReport
 
 | Target | Version |
 | --- | --- |
-| Flutter package (`pubspec.yaml`) | `0.1.54+55` |
-| MSIX package (`msix_config.msix_version`) | `0.1.54.55` |
+| Flutter package (`pubspec.yaml`) | `0.1.55+56` |
+| MSIX package (`msix_config.msix_version`) | `0.1.55.56` |
 | Android package name | `com.stefanronnkvist.paid.squarenumber` |
 
 The Information tab renders the AAB and MSIX versions from `lib/app/app_metadata.dart`. `scripts/bump-version.ps1` updates `pubspec.yaml`, `android/local.properties`, and `lib/app/app_metadata.dart` together, so run it instead of editing version numbers by hand.
