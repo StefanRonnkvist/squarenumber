@@ -8,8 +8,8 @@ Every clear scores the sum of its values multiplied by the number of squares rem
 
 The pressure rises with your score. Effective fall speed increases every 500 points, up to 1.50x, turning careful setup into quick decisions as each run develops.
 
-Choose a base speed and generated number range, then play in system, light, or dark theme. Drag the active square sideways or down, pause when you need a break, or start a fresh run at any time.
+Choose a base speed and generated number range, then play in system, light, or dark theme. Drag the active square sideways or down, pause when you need a break, or start a fresh run at any time. Works on phones, tablets, and desktops from the same build.
 
-Square Number saves a non-empty board when the app moves to the background and restores it in a paused state on your next launch. Your highest score and 10 best completed runs stay on your device, while a qualifying current run appears in the list as you play.
+Square Number saves a non-empty board when the app moves to the background and restores it in a paused state on your next launch. Your highest score and 10 best completed runs stay on your device, while a qualifying current run appears in the list as you play. An in-app help tab and a feedback form with app diagnostics are always a tap away.
 
 Return to the same stack, chase a new best, and look for the cascade that changes the run.

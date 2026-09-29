@@ -44,5 +44,16 @@ void main() {
     expect(find.textContaining('10 best completed runs'), findsOneWidget);
     expect(find.textContaining('appears as Current'), findsOneWidget);
     expect(find.text('Tune the game'), findsOneWidget);
+    expect(find.textContaining('repeated value'), findsOneWidget);
+    expect(find.textContaining('floating indicator'), findsOneWidget);
+
+    await tester.dragUntilVisible(
+      find.text('Play anywhere'),
+      find.byType(SingleChildScrollView),
+      const Offset(0, -250),
+    );
+
+    expect(find.text('Play anywhere'), findsOneWidget);
+    expect(find.text('Get help and send feedback'), findsOneWidget);
   });
 }

@@ -436,7 +436,7 @@ class _SettingsTabState extends State<SettingsTab> {
           ),
           const SizedBox(height: 12),
           Text(
-            'Guide each falling square into a match, trigger cascades, and keep the stack below the top border.',
+            'Guide each falling square into a match on the five-column board, trigger cascades, and keep the stack below the top border.',
             style: textTheme.bodyLarge,
             textAlign: TextAlign.center,
           ),
@@ -460,7 +460,7 @@ class _SettingsTabState extends State<SettingsTab> {
                     leading: Icon(Icons.grid_on_outlined),
                     title: Text('Make a clear'),
                     subtitle: Text(
-                      'Clear 2+ equal squares that touch at an edge or corner. You can also clear 3+ unique consecutive values connected vertically or horizontally.',
+                      'Clear 2+ equal squares that touch at an edge or corner. You can also clear 3+ unique consecutive values connected vertically or horizontally. Such a chain may turn corners, but a repeated value such as 1-2-1 is not a valid chain.',
                     ),
                   ),
                   ListTile(
@@ -468,7 +468,7 @@ class _SettingsTabState extends State<SettingsTab> {
                     leading: Icon(Icons.calculate_outlined),
                     title: Text('Score and build cascades'),
                     subtitle: Text(
-                      'A clear scores (sum of its values) x (squares removed). Clears caused by falling squares earn an increasing cascade multiplier until the next square appears.',
+                      'A clear scores (sum of its values) x (squares removed), and a floating indicator shows each clear as it lands. Clears caused by falling squares earn an increasing cascade multiplier until the next square appears.',
                     ),
                   ),
                   ListTile(
@@ -501,6 +501,22 @@ class _SettingsTabState extends State<SettingsTab> {
                     title: Text('Tune the game'),
                     subtitle: Text(
                       'Controls lets you choose base speed, generated number range, and system, light, or dark theme. Changing the number range starts a fresh board.',
+                    ),
+                  ),
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: Icon(Icons.devices_outlined),
+                    title: Text('Play anywhere'),
+                    subtitle: Text(
+                      'Square Number runs on Android, iOS, web, Windows, Linux, and macOS. The board always has five columns, the square size follows the board width, and each run is tagged Phone, Tablet, or Desktop in Score History.',
+                    ),
+                  ),
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: Icon(Icons.support_agent_outlined),
+                    title: Text('Get help and send feedback'),
+                    subtitle: Text(
+                      'The Information tab has an in-app help summary of these rules, a feedback form that attaches app diagnostics, and a viewer for hosted submissions.',
                     ),
                   ),
                 ],
