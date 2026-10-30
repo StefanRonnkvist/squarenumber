@@ -646,6 +646,16 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
     return (col * _squareSize).clamp(0.0, _areaWidth - size);
   }
 
+  void _stopDraggingCurrentSquare() {
+    final draggedSquare = _squares.cast<FallingSquare?>().firstWhere(
+      (square) => square?.dragging ?? false,
+      orElse: () => null,
+    );
+    if (draggedSquare != null) {
+      _stopDragging(draggedSquare);
+    }
+  }
+
   void _stopDragging(FallingSquare sq) {
     setState(() {
       sq.dragging = false;
@@ -1157,11 +1167,17 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
                                 onPanEnd: canDragSquare
                                     ? (_) => _stopDragging(sq)
                                     : null,
+                                onPanCancel: canDragSquare
+                                    ? _stopDraggingCurrentSquare
+                                    : null,
                                 onTapDown: canDragSquare
                                     ? (_) => _startDragging(sq)
                                     : null,
                                 onTapUp: canDragSquare
                                     ? (_) => _stopDragging(sq)
+                                    : null,
+                                onTapCancel: canDragSquare
+                                    ? _stopDraggingCurrentSquare
                                     : null,
                                 child: Container(
                                   width: sq.size,
