@@ -289,6 +289,7 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
       score: _score,
       comboMultiplier: _comboMultiplier,
       isGameOver: _isGameOver,
+      squareSize: _squareSize,
       squares: _squares
           .map(
             (square) => FallingSquare(
@@ -355,19 +356,20 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
       _squares
         ..clear()
         ..addAll(
-          snapshot.squares.map(
-            (square) => FallingSquare(
-              x: square.x,
-              y: square.y,
-              size: square.size,
+          snapshot.squares.map((square) {
+            final scale = _squareSize / snapshot.squareSize;
+            return FallingSquare(
+              x: square.x * scale,
+              y: square.y * scale,
+              size: _squareSize,
               color: square.color,
               speed: square.speed,
               number: square.number,
               landed: square.landed,
               placed: square.placed,
               dragging: false,
-            ),
-          ),
+            );
+          }),
         );
       _pendingPersistedPausedSnapshot = null;
       _hasInitializedInjectedSquares = true;
@@ -1289,12 +1291,14 @@ class _PausedLayoutSnapshot {
     required this.score,
     required this.comboMultiplier,
     required this.isGameOver,
+    required this.squareSize,
     required this.squares,
   });
 
   final int score;
   final int comboMultiplier;
   final bool isGameOver;
+  final double squareSize;
   final List<FallingSquare> squares;
 
   Map<String, Object> toJson() {
@@ -1302,6 +1306,7 @@ class _PausedLayoutSnapshot {
       'score': score,
       'comboMultiplier': comboMultiplier,
       'isGameOver': isGameOver,
+      'squareSize': squareSize,
       'squares': squares
           .map(
             (square) => {
@@ -1325,11 +1330,14 @@ class _PausedLayoutSnapshot {
     final score = json['score'] as int?;
     final comboMultiplier = json['comboMultiplier'] as int?;
     final isGameOver = json['isGameOver'] as bool?;
+    final squareSize = (json['squareSize'] as num?)?.toDouble();
     final rawSquares = json['squares'];
 
     if (score == null ||
         comboMultiplier == null ||
         isGameOver == null ||
+        squareSize == 0 ||
+        (squareSize != null && squareSize < 0) ||
         rawSquares is! List) {
       return null;
     }
@@ -1379,6 +1387,11 @@ class _PausedLayoutSnapshot {
       score: score,
       comboMultiplier: comboMultiplier,
       isGameOver: isGameOver,
+      // Older saved boards did not store their grid size; use a square's size
+      // as the coordinate scale when possible, otherwise retain safe defaults.
+      squareSize:
+          squareSize ??
+          (restoredSquares.isNotEmpty ? restoredSquares.first.size : 1.0),
       squares: restoredSquares,
     );
   }

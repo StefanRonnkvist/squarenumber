@@ -9,5 +9,6 @@
   "gradle.nestedProjects": [
     "android"
   ],
-  "cmake.sourceDirectory": "${workspaceFolder}/windows"
+  "cmake.sourceDirectory": "${workspaceFolder}/windows",
+  "CodeGPT.apiKey": "CodeGPT Plus Beta"
 }

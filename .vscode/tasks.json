@@ -7,7 +7,6 @@
       "dependsOn": [
         "Pub Update All",
         "Flutter: Version Bump",
-        "Docs: Audit Store Listing, Help and README",
         "Build All Release Targets"
       ],
       "group": "build",
@@ -216,6 +215,25 @@
         "reveal": "always",
         "panel": "shared",
         "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Git: Commit and Push All",
+      "type": "shell",
+      "command": "pwsh",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "scripts/git-commit-push.ps1",
+        "-Message",
+        "Update project"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
       },
       "problemMatcher": []
     }
