@@ -1,25 +1,25 @@
 # Square Number
 
-Square Number is a falling-number puzzle game built with Flutter. Guide each active square into a match, chain clears as the board settles, and keep the five-column stack below the top border. The app supports Android, iOS, web, Windows, Linux, and macOS from one adaptive codebase.
+Square Number is a falling-number puzzle game built with Flutter. Guide each active square into a match, chain clears as the board settles, and keep the five-column stack below the top border. The repository includes release build tasks for Android, web, and Windows, plus Flutter platform targets for iOS, Linux, and macOS.
 
 ## Gameplay
 
 1. Select **Start**, then drag the falling square sideways or down. Releasing it snaps it to one of five columns; placed squares cannot be moved.
 2. Clear at least two equal squares that touch at an edge or corner, or clear an orthogonally connected chain of at least three unique values where each neighboring value differs by exactly one. Consecutive chains can turn corners, but a repeated value inside a chain (for example `1-2-1`) does not count.
-3. Each clear scores `(sum of removed values) x (number of removed squares)`.
-4. When a clear removes support, newly falling squares can trigger another clear. Each clear in that cascade receives an increasing multiplier, which resets when the next square appears. Floating score indicators show each clear as it lands.
-5. Effective speed increases by `0.10x` every 500 points and is capped at `1.50x`.
+3. Each matching group scores `(sum of its values) x (number of squares in that group)`; the group scores are added together for a clear.
+4. When a clear removes support, newly falling squares can trigger another clear. Each clear in that cascade receives an increasing multiplier, which resets when the next square appears. Floating score indicators show the points earned by each clear.
+5. The effective speed starts at your chosen base speed, increases by `0.10x` every 500 points, and is capped at `1.50x`.
 6. The run ends when a placed square extends above the top border.
 
 ## Controls And Saved Runs
 
 - **Start/Pause** starts or pauses the current board. On narrow screens these commands use icon buttons with tooltips.
-- **New Game** records a positive current score in the device-local top 10, clears the board, and immediately starts a new run.
+- **New Game** records a positive current score as a completed run, clears the board, and immediately starts a new run. A game-over run is recorded as well.
 - Moving the app to the background pauses the game and saves a non-empty board. The saved board and score are restored in a paused state on the next launch.
-- Opening Settings on a phone pauses an active run.
-- Changing the generated number range starts a fresh board. Base speed and theme changes apply directly.
-- Phone gameplay is kept in portrait after a run starts. Tablet and desktop layouts support the available orientations.
-- The current score appears in Score History only when it qualifies for the top 10. It is marked **Current** until the run ends; completed entries retain their effective speed and Phone, Tablet, or Desktop layout label.
+- Switching away from the game on a phone pauses an active run. Phone gameplay uses portrait orientation; changing orientation or resizing the board pauses a running game.
+- Changing either generated-number bound starts a fresh board. Base speed and theme changes apply directly.
+- Tablet and desktop layouts support portrait and landscape orientations.
+- The current positive score appears in Score History only when it qualifies for the top 10. It is marked **Current** while in progress; completed entries retain their effective speed and Phone, Tablet, or Desktop layout label. Use **Clear History** to remove the completed-run history.
 
 ## Features
 
@@ -32,7 +32,8 @@ Square Number is a falling-number puzzle game built with Flutter. Guide each act
 - Configurable minimum and maximum generated values
 - System, light, and dark themes
 - Adaptive phone, tablet, and desktop layouts
-- In-app feedback and bug-report form with app diagnostics
+- Settings tabs for Controls, Score History, Information, and Help
+- In-app feedback and bug-report form with app, platform, orientation, and layout diagnostics
 - Hosted-submission viewer in the Information tab
 - Built-in How to Play reference in the Help tab
 
@@ -45,7 +46,7 @@ Google Play copy is maintained in [`store_listing/`](store_listing/):
 - [`store_listing/google_play_short_synopsis.txt`](store_listing/google_play_short_synopsis.txt) — the short description used on the store listing.
 - [`store_listing/google_play_long_synopsis.txt`](store_listing/google_play_long_synopsis.txt) — the full description, kept within the 4000-character Google Play limit.
 
-`assets/play_store_512.png` is shipped as a Flutter asset so the same artwork is reused for web and packaging.
+`assets/play_store_512.png` is bundled as a Flutter asset. The short and long copy target Google Play's 80-character and 4000-character limits respectively.
 
 ## Tech Stack
 
@@ -140,11 +141,11 @@ android/gradlew.bat :app:signingReport
 
 | Target | Version |
 | --- | --- |
-| Flutter package (`pubspec.yaml`) | `0.1.56+57` |
-| MSIX package (`msix_config.msix_version`) | `0.1.56.57` |
+| Flutter package (`pubspec.yaml`) | `0.1.60+61` |
+| MSIX package (`msix_config.msix_version`) | `0.1.60.61` |
 | Android package name | `com.stefanronnkvist.paid.squarenumber` |
 
-The Information tab renders the AAB and MSIX versions from `lib/app/app_metadata.dart`. `scripts/bump-version.ps1` updates `pubspec.yaml`, `android/local.properties`, and `lib/app/app_metadata.dart` together, so run it instead of editing version numbers by hand.
+The Information tab renders the AAB and MSIX versions from `lib/app/app_metadata.dart`. `scripts/bump-version.ps1` updates `pubspec.yaml`, `android/local.properties`, and `lib/app/app_metadata.dart` together, remember to update app metadata and this README separately; the script does not change them.
 
 ## Documentation Audit
 

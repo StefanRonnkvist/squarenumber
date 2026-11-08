@@ -42,7 +42,7 @@ void main() {
 
     expect(find.text('Pause, restore, and restart'), findsOneWidget);
     expect(find.text('Track your scores'), findsOneWidget);
-    expect(find.textContaining('10 best completed runs'), findsOneWidget);
+    expect(find.textContaining('10 highest completed runs'), findsOneWidget);
     expect(find.textContaining('appears as Current'), findsOneWidget);
     expect(find.text('Tune the game'), findsOneWidget);
     expect(find.textContaining('repeated value'), findsOneWidget);

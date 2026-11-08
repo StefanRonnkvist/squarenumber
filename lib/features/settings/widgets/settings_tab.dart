@@ -452,7 +452,7 @@ class _SettingsTabState extends State<SettingsTab> {
                     leading: Icon(Icons.touch_app_outlined),
                     title: Text('Move the active square'),
                     subtitle: Text(
-                      'Select Start, then drag the falling square sideways or down. It snaps to one of five columns when released. Placed squares cannot be moved.',
+                      'Select Start, then drag the falling square sideways or down. It snaps to one of five columns when released, and placed squares cannot be moved. On a narrow screen, the Start/Pause and New Game controls may appear as icon buttons with tooltips.',
                     ),
                   ),
                   ListTile(
@@ -468,7 +468,7 @@ class _SettingsTabState extends State<SettingsTab> {
                     leading: Icon(Icons.calculate_outlined),
                     title: Text('Score and build cascades'),
                     subtitle: Text(
-                      'A clear scores (sum of its values) x (squares removed), and a floating indicator shows each clear as it lands. Clears caused by falling squares earn an increasing cascade multiplier until the next square appears.',
+                      'Each clear scores (sum of values in each matching group x that group’s size), multiplied by the current cascade multiplier. A floating indicator shows the points earned. Each clear caused as the board settles increases the multiplier; the next falling square resets it.',
                     ),
                   ),
                   ListTile(
@@ -476,7 +476,7 @@ class _SettingsTabState extends State<SettingsTab> {
                     leading: Icon(Icons.speed_outlined),
                     title: Text('Survive the rising pace'),
                     subtitle: Text(
-                      'Effective speed increases by 0.10x every 500 points, up to 1.50x. The run ends when a placed square extends above the top border.',
+                      'Your chosen base speed is increased by 0.10x for every 500 points, up to 1.50x total. The run ends when a placed square extends above the top border.',
                     ),
                   ),
                   ListTile(
@@ -484,7 +484,7 @@ class _SettingsTabState extends State<SettingsTab> {
                     leading: Icon(Icons.save_outlined),
                     title: Text('Pause, restore, and restart'),
                     subtitle: Text(
-                      'Pause at any time. Moving the app to the background pauses and saves a non-empty board, which is restored paused on your next launch. New Game records a positive score before restarting.',
+                      'Use Pause whenever you need a break. Leaving the app or switching away from the game on a phone pauses it; a non-empty board is saved and restored paused the next time you open the app. New Game immediately starts fresh and records a positive score as a completed run. Game over also completes the run; Restart begins another one.',
                     ),
                   ),
                   ListTile(
@@ -492,7 +492,7 @@ class _SettingsTabState extends State<SettingsTab> {
                     leading: Icon(Icons.leaderboard_outlined),
                     title: Text('Track your scores'),
                     subtitle: Text(
-                      'Score History keeps your 10 best completed runs on this device. A qualifying run appears as Current while you play, and your highest score is saved separately.',
+                      'Score History keeps your 10 highest completed runs on this device, sorted by score. A positive current score appears as Current only when it qualifies for the top 10. Your highest score is saved separately; use Clear History to remove the run history.',
                     ),
                   ),
                   ListTile(
@@ -500,7 +500,7 @@ class _SettingsTabState extends State<SettingsTab> {
                     leading: Icon(Icons.tune_outlined),
                     title: Text('Tune the game'),
                     subtitle: Text(
-                      'Controls lets you choose base speed, generated number range, and system, light, or dark theme. Changing the number range starts a fresh board.',
+                      'Controls lets you choose base speed (0.20x–1.50x), the lowest and highest generated numbers, and system, light, or dark theme. Changing either number bound starts a fresh board; speed and theme apply directly.',
                     ),
                   ),
                   ListTile(
@@ -508,7 +508,7 @@ class _SettingsTabState extends State<SettingsTab> {
                     leading: Icon(Icons.devices_outlined),
                     title: Text('Play anywhere'),
                     subtitle: Text(
-                      'Square Number runs on Android, iOS, web, Windows, Linux, and macOS. The board always has five columns, the square size follows the board width, and each run is tagged Phone, Tablet, or Desktop in Score History.',
+                      'The adaptive layout supports phones, tablets, and desktop screens, with a five-column board whose squares scale to the play area. Phone gameplay uses portrait orientation; rotating a running board pauses the game. Score History labels runs Phone, Tablet, or Desktop.',
                     ),
                   ),
                   ListTile(
@@ -516,7 +516,7 @@ class _SettingsTabState extends State<SettingsTab> {
                     leading: Icon(Icons.support_agent_outlined),
                     title: Text('Get help and send feedback'),
                     subtitle: Text(
-                      'The Information tab has an in-app help summary of these rules, a feedback form that attaches app diagnostics, and a viewer for hosted submissions.',
+                      'Open Information for the feedback form and hosted-submission viewer. Sending feedback or loading hosted submissions requires an internet connection. Your board, best score, and score history are stored on this device; no account is required.',
                     ),
                   ),
                 ],
