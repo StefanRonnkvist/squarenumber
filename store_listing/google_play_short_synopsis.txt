@@ -1,1 +1,1 @@
-Match falling numbers, chain clears, and keep the stack below the top border.
+Match falling numbers, chain clears, and stay below the top.

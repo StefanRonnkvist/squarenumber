@@ -1,15 +1,15 @@
-Square Number is a focused falling-number puzzle where every placement matters. Guide each active square across a compact five-column board, create matches, and keep the stack below the top border.
+Square Number is a falling-number puzzle where every placement matters. Guide the active square across a compact five-column board, make matches, and keep the stack from reaching the top.
 
-Clear the board in two ways:
-- Connect 2 or more equal squares at an edge or corner.
-- Build an orthogonally connected chain of 3 or more unique consecutive values. Chains can turn corners, but values cannot repeat.
+Find a clear in either of two ways:
+- Match at least 2 equal squares touching at an edge or corner.
+- Connect at least 3 unique consecutive values orthogonally. Chains can turn corners, but cannot repeat a value.
 
-Each matching group scores (sum of its values) x (number of squares in that group); group scores are added together for each clear. When a clear makes the stack fall into another match, an increasing cascade multiplier applies until the next square appears. Floating score markers show the points earned for each clear.
+For each matching group, the score is the sum of its values multiplied by its size. Group scores are added, then multiplied by the cascade multiplier. When cleared squares remove support, falling squares can create another match; the multiplier starts at x1, rises with each clear in the cascade, and resets when the next square appears. Floating markers show points earned.
 
-The pressure rises with your score. Starting from your chosen base speed, effective fall speed increases by 0.10x every 500 points, up to 1.50x, turning careful setup into quick decisions as each run develops.
+The pace rises as your score grows. Choose a base fall speed from 0.20x to 1.50x; effective speed increases by 0.10x every 500 points, up to 1.50x. Drag the active square sideways or down and release to snap it to a column. It continues falling until it lands, and landed squares cannot be moved. Pause for a break or start a new run whenever you like. Game over completes the run; Restart begins another.
 
-Choose a base speed from 0.20x to 1.50x and a generated number range, then play in system, light, or dark theme. Drag the active square sideways or down; releasing it snaps it to one of five columns, and placed squares cannot be moved. Pause when you need a break, or start a fresh run at any time. The adaptive interface supports phones, tablets, and desktop screens; phone gameplay uses portrait orientation, while tablet and desktop support portrait and landscape.
+Set the generated number range and choose system, light, or dark theme. The adaptive interface supports phones, tablets, and desktop screens. Phone gameplay uses portrait orientation; tablet and desktop layouts support portrait and landscape.
 
-Square Number saves a non-empty board when the app moves to the background and restores it in a paused state on your next launch. Your highest score and 10 best completed runs stay on your device, while a positive current score appears in Score History as Current only when it qualifies for the top 10. Settings includes Controls, Score History, Information, and Help. Information provides a feedback form with app diagnostics and a viewer for hosted submissions. Sending feedback or loading hosted submissions requires an internet connection; game progress and scores are stored locally, and no account is required.
+A non-empty board is saved when the app moves to the background and restored paused on your next launch. Your highest score and top 10 completed runs stay on your device. A positive current score appears in Score History as Current only when it qualifies for the top 10; Clear History removes completed runs but preserves your highest score. Settings includes Controls, Score History, Information, and Help. Information provides a feedback form with app diagnostics and a hosted-submissions viewer. Sending feedback or loading hosted submissions requires an internet connection. Game progress and scores are stored locally; no account is required.
 
-Return to the same stack, chase a new best, and look for the cascade that changes the run.
+Return to your stack, chase a new best, and discover the cascade that changes your run.

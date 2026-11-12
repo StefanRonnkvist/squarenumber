@@ -452,7 +452,7 @@ class _SettingsTabState extends State<SettingsTab> {
                     leading: Icon(Icons.touch_app_outlined),
                     title: Text('Move the active square'),
                     subtitle: Text(
-                      'Select Start, then drag the falling square sideways or down. It snaps to one of five columns when released, and placed squares cannot be moved. On a narrow screen, the Start/Pause and New Game controls may appear as icon buttons with tooltips.',
+                      'Select Start, then drag the falling square sideways or down. Releasing it snaps it to one of five columns; it keeps falling until it lands. Only landed squares are locked in place. On a narrow screen, Start/Pause and New Game may appear as icon buttons with tooltips.',
                     ),
                   ),
                   ListTile(
@@ -468,7 +468,7 @@ class _SettingsTabState extends State<SettingsTab> {
                     leading: Icon(Icons.calculate_outlined),
                     title: Text('Score and build cascades'),
                     subtitle: Text(
-                      'Each clear scores (sum of values in each matching group x that group’s size), multiplied by the current cascade multiplier. A floating indicator shows the points earned. Each clear caused as the board settles increases the multiplier; the next falling square resets it.',
+                      'For each clear, add (the sum of values x the size) for every matching group, then multiply by the cascade multiplier. It starts at x1, increases after each clear in the cascade, and resets when the next square appears. A floating indicator shows the points earned.'
                     ),
                   ),
                   ListTile(
@@ -484,7 +484,7 @@ class _SettingsTabState extends State<SettingsTab> {
                     leading: Icon(Icons.save_outlined),
                     title: Text('Pause, restore, and restart'),
                     subtitle: Text(
-                      'Use Pause whenever you need a break. Leaving the app or switching away from the game on a phone pauses it; a non-empty board is saved and restored paused the next time you open the app. New Game immediately starts fresh and records a positive score as a completed run. Game over also completes the run; Restart begins another one.',
+                      'Start/Pause toggles the current run. New Game clears the board, records a positive score, and starts a fresh run immediately. Game over completes the run and changes the control to Restart. Leaving the app or switching away from the game on a phone pauses it; a non-empty board is saved and restored paused the next time you open the app.',
                     ),
                   ),
                   ListTile(
@@ -492,7 +492,7 @@ class _SettingsTabState extends State<SettingsTab> {
                     leading: Icon(Icons.leaderboard_outlined),
                     title: Text('Track your scores'),
                     subtitle: Text(
-                      'Score History keeps your 10 highest completed runs on this device, sorted by score. A positive current score appears as Current only when it qualifies for the top 10. Your highest score is saved separately; use Clear History to remove the run history.',
+                      'Score History keeps your 10 highest completed runs on this device, sorted by score. A positive current score appears as Current only when it qualifies for the top 10. Your highest score is saved separately; Clear History removes the run history but keeps your highest score.',
                     ),
                   ),
                   ListTile(

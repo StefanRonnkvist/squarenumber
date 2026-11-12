@@ -4,22 +4,22 @@ Square Number is a falling-number puzzle game built with Flutter. Guide each act
 
 ## Gameplay
 
-1. Select **Start**, then drag the falling square sideways or down. Releasing it snaps it to one of five columns; placed squares cannot be moved.
+1. Select **Start**, then drag the active falling square sideways or down. Releasing it snaps it to one of five columns; it continues falling until it lands, and landed squares cannot be moved.
 2. Clear at least two equal squares that touch at an edge or corner, or clear an orthogonally connected chain of at least three unique values where each neighboring value differs by exactly one. Consecutive chains can turn corners, but a repeated value inside a chain (for example `1-2-1`) does not count.
-3. Each matching group scores `(sum of its values) x (number of squares in that group)`; the group scores are added together for a clear.
-4. When a clear removes support, newly falling squares can trigger another clear. Each clear in that cascade receives an increasing multiplier, which resets when the next square appears. Floating score indicators show the points earned by each clear.
+3. For each matching group in a clear, calculate `(sum of values) x (number of squares in that group)`. Add those group scores together, then apply the current cascade multiplier.
+4. When a clear removes support, falling squares can settle into another clear. The multiplier starts at x1, increases after each clear in the cascade, and resets when the next square appears. Floating score indicators show the points earned by each clear.
 5. The effective speed starts at your chosen base speed, increases by `0.10x` every 500 points, and is capped at `1.50x`.
 6. The run ends when a placed square extends above the top border.
 
 ## Controls And Saved Runs
 
 - **Start/Pause** starts or pauses the current board. On narrow screens these commands use icon buttons with tooltips.
-- **New Game** records a positive current score as a completed run, clears the board, and immediately starts a new run. A game-over run is recorded as well.
+- **New Game** records a positive current score as a completed run, clears the board, and immediately starts a new run. Game over also completes the run; the **Restart** control begins a fresh run.
 - Moving the app to the background pauses the game and saves a non-empty board. The saved board and score are restored in a paused state on the next launch.
 - Switching away from the game on a phone pauses an active run. Phone gameplay uses portrait orientation; changing orientation or resizing the board pauses a running game.
 - Changing either generated-number bound starts a fresh board. Base speed and theme changes apply directly.
 - Tablet and desktop layouts support portrait and landscape orientations.
-- The current positive score appears in Score History only when it qualifies for the top 10. It is marked **Current** while in progress; completed entries retain their effective speed and Phone, Tablet, or Desktop layout label. Use **Clear History** to remove the completed-run history.
+- The current positive score appears in Score History only when it qualifies for the top 10. It is marked **Current** while in progress; completed entries retain their effective speed and Phone, Tablet, or Desktop layout label. **Clear History** removes completed-run history but does not clear the separately saved highest score.
 
 ## Features
 
@@ -141,36 +141,23 @@ android/gradlew.bat :app:signingReport
 
 | Target | Version |
 | --- | --- |
-| Flutter package (`pubspec.yaml`) | `0.1.60+61` |
-| MSIX package (`msix_config.msix_version`) | `0.1.60.61` |
+| Flutter package (`pubspec.yaml`) | `0.1.64+65` |
+| MSIX package (`msix_config.msix_version`) | `0.1.64.65` |
 | Android package name | `com.stefanronnkvist.paid.squarenumber` |
 
-The Information tab renders the AAB and MSIX versions from `lib/app/app_metadata.dart`. `scripts/bump-version.ps1` updates `pubspec.yaml`, `android/local.properties`, and `lib/app/app_metadata.dart` together, remember to update app metadata and this README separately; the script does not change them.
+`scripts/bump-version.ps1` updates `pubspec.yaml` and `android/local.properties`; it does not update `lib/app/app_metadata.dart` or this README. The app metadata currently reports `0.1.56+57` (`0.1.56.57` for MSIX), so its displayed diagnostic versions are out of step with the package versions above.
 
-## Documentation Audit
+## Documentation Maintenance
 
-`scripts/audit-docs.ps1` verifies that the shipped documentation still matches the app:
-
-- `pubspec.yaml`, `lib/app/app_metadata.dart`, and the MSIX version agree
-- README's version table and the Information tab test use the current version
-- The store listing stays within Google Play's 80-character short and 4000-character long limits
-- The Help tab still documents the rules the game enforces
-- Every relative link in README resolves to a real file
-
-```powershell
-pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/audit-docs.ps1
-```
-
-It exits non-zero with a list of problems, and runs as part of the `Google Store` VS Code task before any release build.
+Keep this README, the Help tab in `lib/features/settings/widgets/settings_tab.dart`, and the Google Play copy in `store_listing/` aligned with the rules and settings implemented by the game. Google Play limits the short and long descriptions to 80 and 4000 characters respectively. The current `scripts/audit-docs.ps1` still refers to files from a different, legacy project and is not a valid audit for Square Number.
 
 ### Release flow
 
 ```powershell
 pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/bump-version.ps1
-pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/audit-docs.ps1
 ```
 
-`bump-version.ps1` is the only script that writes a version number. It updates `pubspec.yaml`, `android/local.properties`, `lib/app/app_metadata.dart`, and the README version table together, so the audit is green straight after a bump.
+The version script updates `pubspec.yaml` and `android/local.properties`. Before release, manually verify the README version table, `lib/app/app_metadata.dart`, and the Google Play descriptions; the current documentation audit script targets a legacy project and must not be used as a Square Number release gate.
 
 ## License
 
