@@ -81,6 +81,57 @@ void main() {
       expect(find.text('Score: 420'), findsOneWidget);
     });
 
+    testWidgets('celebrates when a current run enters the top ten', (
+      tester,
+    ) async {
+      SharedPreferences.setMockInitialValues({});
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(const MainApp());
+      await tester.pumpAndSettle();
+
+      final game = tester.widget<FallingSquaresArea>(
+        find.byType(FallingSquaresArea),
+      );
+      game.onScoreChanged?.call(420);
+      await tester.pump();
+
+      expect(find.text('Top 10!'), findsOneWidget);
+      expect(find.text('#1'), findsOneWidget);
+      expect(find.text('POSITION'), findsOneWidget);
+    });
+
+    testWidgets('shows the achieved rank below an existing top score', (
+      tester,
+    ) async {
+      SharedPreferences.setMockInitialValues({
+        'score_history': [
+          jsonEncode(
+            const ScoreHistoryEntryData(
+              score: 600,
+              speedMultiplier: 1,
+              layout: 'Phone',
+            ).toJson(),
+          ),
+        ],
+      });
+      await tester.binding.setSurfaceSize(const Size(390, 844));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
+      await tester.pumpWidget(const MainApp());
+      await tester.pumpAndSettle();
+
+      final game = tester.widget<FallingSquaresArea>(
+        find.byType(FallingSquaresArea),
+      );
+      game.onScoreChanged?.call(420);
+      await tester.pump();
+
+      expect(find.text('Top 10!'), findsOneWidget);
+      expect(find.text('#2'), findsOneWidget);
+    });
+
     testWidgets('persists a completed phone game across an app restart', (
       tester,
     ) async {

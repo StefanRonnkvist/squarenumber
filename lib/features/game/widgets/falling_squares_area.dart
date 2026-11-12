@@ -22,6 +22,8 @@ class FallingSquaresArea extends StatefulWidget {
     this.onRunningChanged,
     this.onGameOverChanged,
     this.onGameCompleted,
+    this.topTenPosition,
+    this.onTopTenCelebrationDismissed,
     this.initialSquaresBuilder,
     this.disableSpawning = false,
   });
@@ -36,6 +38,8 @@ class FallingSquaresArea extends StatefulWidget {
   final ValueChanged<bool>? onRunningChanged;
   final ValueChanged<bool>? onGameOverChanged;
   final ValueChanged<int>? onGameCompleted;
+  final int? topTenPosition;
+  final VoidCallback? onTopTenCelebrationDismissed;
   final List<FallingSquare> Function(double squareSize)? initialSquaresBuilder;
   final bool disableSpawning;
 
@@ -53,7 +57,12 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
   late final List<Color> _safeDarkColors = generateSafeDarkColors();
   Timer? _updateTimer;
   Timer? _spawnTimer;
+  Timer? _milestoneTimer;
+  Timer? _topTenTimer;
+  int? _topTenCelebrationPosition;
   int _score = 0;
+  int _nextMilestoneScore = 1000;
+  bool _showMilestoneCelebration = false;
   bool _isRunning = false;
   bool _isGameOver = false;
   late double _activePreferredSquareSize;
@@ -98,6 +107,10 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
   void initState() {
     super.initState();
     _activePreferredSquareSize = widget.preferredSquareSize;
+    _topTenCelebrationPosition = widget.topTenPosition;
+    if (widget.topTenPosition != null) {
+      _scheduleTopTenCelebrationDismissal();
+    }
     WidgetsBinding.instance.addObserver(this);
     _loadPersistedPausedSnapshot();
     _updateTimer = Timer.periodic(
@@ -120,6 +133,14 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
   @override
   void didUpdateWidget(covariant FallingSquaresArea oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.topTenPosition != widget.topTenPosition) {
+      _topTenTimer?.cancel();
+      _topTenCelebrationPosition = widget.topTenPosition;
+      if (widget.topTenPosition != null) {
+        _scheduleTopTenCelebrationDismissal();
+      }
+    }
 
     if (oldWidget.isActive && !widget.isActive) {
       _pauseGame();
@@ -227,6 +248,10 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
       _activePreferredSquareSize = widget.preferredSquareSize;
       _squares.clear();
       _score = 0;
+      _nextMilestoneScore = 1000;
+      _showMilestoneCelebration = false;
+      _milestoneTimer?.cancel();
+      _milestoneTimer = null;
       _isRunning = false;
       _isGameOver = false;
       _comboMultiplier = 1;
@@ -351,6 +376,7 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
 
     setState(() {
       _score = snapshot.score;
+      _nextMilestoneScore = ((_score ~/ 1000) + 1) * 1000;
       _comboMultiplier = snapshot.comboMultiplier;
       _isGameOver = snapshot.isGameOver;
       _squares
@@ -850,6 +876,10 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
     }
 
     _score += multipliedPoints;
+    while (_score >= _nextMilestoneScore) {
+      _nextMilestoneScore += 1000;
+      _showThousandPointCelebration();
+    }
     widget.onScoreChanged?.call(_score);
     _squares.removeWhere(toRemove.contains);
 
@@ -928,6 +958,8 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
     widget.onRunningChanged?.call(false);
     _updateTimer?.cancel();
     _spawnTimer?.cancel();
+    _milestoneTimer?.cancel();
+    _topTenTimer?.cancel();
     super.dispose();
   }
 
@@ -1243,6 +1275,191 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
                             ),
                           );
                         }),
+                        if (_topTenCelebrationPosition != null)
+                          Positioned.fill(
+                            child: IgnorePointer(
+                              child: Center(
+                                child: Transform.rotate(
+                                  angle: 0.045,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 26,
+                                      vertical: 20,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF68E1FD),
+                                      border: Border.all(
+                                        color: const Color(0xFF5A189A),
+                                        width: 6,
+                                      ),
+                                      borderRadius: BorderRadius.circular(30),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color: Color(0x99000000),
+                                          blurRadius: 16,
+                                          offset: Offset(0, 8),
+                                        ),
+                                        BoxShadow(
+                                          color: Colors.white,
+                                          blurRadius: 0,
+                                          spreadRadius: 2,
+                                        ),
+                                      ],
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          'Top 10!',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: min(_areaWidth * 0.14, 58),
+                                            height: 1,
+                                            fontWeight: FontWeight.w900,
+                                            letterSpacing: 1,
+                                            color: Colors.white,
+                                            shadows: const [
+                                              Shadow(
+                                                color: Color(0xFF5A189A),
+                                                blurRadius: 0,
+                                                offset: Offset(3, 4),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          '#$_topTenCelebrationPosition',
+                                          style: TextStyle(
+                                            fontSize: min(_areaWidth * 0.11, 46),
+                                            height: 1,
+                                            fontWeight: FontWeight.w900,
+                                            color: const Color(0xFF5A189A),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        const Text(
+                                          'POSITION',
+                                          style: TextStyle(
+                                            color: Color(0xFF5A189A),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w900,
+                                            letterSpacing: 3,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        if (_showMilestoneCelebration)
+                          Positioned.fill(
+                            child: IgnorePointer(
+                              child: Center(
+                                child: Transform.rotate(
+                                  angle: -0.07,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 28,
+                                      vertical: 18,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFFFD43B),
+                                      border: Border.all(
+                                        color: const Color(0xFFE85D04),
+                                        width: 6,
+                                      ),
+                                      borderRadius: BorderRadius.circular(28),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color: Color(0x99000000),
+                                          blurRadius: 14,
+                                          offset: Offset(0, 7),
+                                        ),
+                                        BoxShadow(
+                                          color: Colors.white,
+                                          blurRadius: 0,
+                                          spreadRadius: 2,
+                                        ),
+                                      ],
+                                    ),
+                                    child: Stack(
+                                      clipBehavior: Clip.none,
+                                      alignment: Alignment.center,
+                                      children: [
+                                        Positioned(
+                                          top: -32,
+                                          left: -28,
+                                          child: Text(
+                                            '✦',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 38,
+                                              shadows: [
+                                                Shadow(
+                                                  color: Colors.deepOrange,
+                                                  blurRadius: 3,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          bottom: -30,
+                                          right: -28,
+                                          child: Text(
+                                            '★',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 34,
+                                              shadows: [
+                                                Shadow(
+                                                  color: Colors.deepOrange,
+                                                  blurRadius: 3,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          '+1000',
+                                          style: TextStyle(
+                                            fontSize: min(_areaWidth * 0.16, 64),
+                                            height: 1,
+                                            fontWeight: FontWeight.w900,
+                                            letterSpacing: 1,
+                                            foreground: Paint()
+                                              ..style = PaintingStyle.stroke
+                                              ..strokeWidth = 8
+                                              ..color = const Color(0xFF8D2B00),
+                                            shadows: const [
+                                              Shadow(
+                                                color: Color(0xFF8D2B00),
+                                                blurRadius: 0,
+                                                offset: Offset(3, 5),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Text(
+                                          '+1000',
+                                          style: TextStyle(
+                                            fontSize: min(_areaWidth * 0.16, 64),
+                                            height: 1,
+                                            fontWeight: FontWeight.w900,
+                                            letterSpacing: 1,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         if (_isGameOver)
                           Positioned.fill(
                             child: Container(
@@ -1290,6 +1507,27 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
         );
       },
     );
+  }
+
+  void _scheduleTopTenCelebrationDismissal() {
+    _topTenTimer = Timer(const Duration(milliseconds: 2200), () {
+      if (!mounted) return;
+      setState(() {
+        _topTenCelebrationPosition = null;
+      });
+      widget.onTopTenCelebrationDismissed?.call();
+    });
+  }
+
+  void _showThousandPointCelebration() {
+    _showMilestoneCelebration = true;
+    _milestoneTimer?.cancel();
+    _milestoneTimer = Timer(const Duration(milliseconds: 1400), () {
+      if (!mounted) return;
+      setState(() {
+        _showMilestoneCelebration = false;
+      });
+    });
   }
 
   void _normalizeSquareSpeeds() {

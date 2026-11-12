@@ -133,7 +133,7 @@
     {
       "label": "Build Release Web",
       "type": "shell",
-      "command": "flutter build web --release",
+      "command": "flutter build web --release --base-href",
       "dependsOn": [
       ],
       "group": "build",

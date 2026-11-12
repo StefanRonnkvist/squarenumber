@@ -32,6 +32,8 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin {
   double _currentGameAreaWidth = 0;
   int _currentScore = 0;
   int _bestScore = 0;
+  int? _topTenCelebrationPosition;
+  int? _currentRunBestTopTenPosition;
   final List<ScoreHistoryEntryData> _scoreHistory = [];
   ThemeMode _themeMode = ThemeMode.system;
   bool _isGameRunning = false;
@@ -519,6 +521,13 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin {
         maxNumber: _maxNumber,
         preferredSquareSize: preferredSquareSize,
         isActive: isActive,
+        topTenPosition: _topTenCelebrationPosition,
+        onTopTenCelebrationDismissed: () {
+          if (!mounted || _topTenCelebrationPosition == null) return;
+          setState(() {
+            _topTenCelebrationPosition = null;
+          });
+        },
         onAreaWidthChanged: (value) {
           // Feed the measured board width back into square-size calculation.
           if ((_currentGameAreaWidth - value).abs() < 0.5) {
@@ -531,6 +540,23 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin {
         onScoreChanged: (score) {
           if (_currentScore == score) {
             return;
+          }
+          if (score <= 0) {
+            _currentRunBestTopTenPosition = null;
+            _topTenCelebrationPosition = null;
+          } else {
+            final position =
+                _scoreHistory.where((entry) => entry.score >= score).length + 1;
+            final qualifies =
+                _scoreHistory.length < _maxScoreHistoryEntries ||
+                score > _scoreHistory[_maxScoreHistoryEntries - 1].score;
+            if (qualifies &&
+                position <= _maxScoreHistoryEntries &&
+                (_currentRunBestTopTenPosition == null ||
+                    position < _currentRunBestTopTenPosition!)) {
+              _currentRunBestTopTenPosition = position;
+              _topTenCelebrationPosition = position;
+            }
           }
           final previousBestScore = _bestScore;
           final nextBestScore = score > previousBestScore
