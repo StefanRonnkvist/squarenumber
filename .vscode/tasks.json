@@ -16,8 +16,8 @@
       "label": "Pub Update All",
       "dependsOrder": "sequence",
       "dependsOn": [
-        "flutter: pub upgrade",
-        "Flutter: Pub Upgrade Major Versions",
+        "Flutter: Pub Upgrade",
+        "Flutter: Pub Upgrade Major",
         "Flutter: Pub Outdated",
         "Flutter: Pub Get"
       ],
@@ -133,7 +133,7 @@
     {
       "label": "Build Release Web",
       "type": "shell",
-      "command": "flutter build web --release --base-href",
+      "command": "flutter build web --release",
       "dependsOn": [
       ],
       "group": "build",
