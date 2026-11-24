@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:squarenumber/features/game/widgets/falling_squares_area.dart';
@@ -658,8 +658,9 @@ class _MainAppState extends State<MainApp> with TickerProviderStateMixin {
       onClearScoreHistory: () {
         setState(() {
           _scoreHistory.clear();
+          _bestScore = _currentScore;
         });
-        _saveScoreHistory();
+        unawaited(_saveScoreHistory());
       },
       maxContentWidth: maxContentWidth,
       onSpeedChanged: (value) {

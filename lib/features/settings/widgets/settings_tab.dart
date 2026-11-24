@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:squarenumber/contact/contact_page.dart';
 import 'package:squarenumber/contact/submissions_csv_page.dart';
 
@@ -468,7 +468,7 @@ class _SettingsTabState extends State<SettingsTab> {
                     leading: Icon(Icons.calculate_outlined),
                     title: Text('Score and build cascades'),
                     subtitle: Text(
-                      'For each clear, add (the sum of values x the size) for every matching group, then multiply by the cascade multiplier. It starts at x1, increases after each clear in the cascade, and resets when the next square appears. A floating indicator shows the points earned.'
+                      'For each clear, add (the sum of values x the size) for every matching group, then multiply by the cascade multiplier. It starts at x1, increases after each clear in the cascade, and resets when the next square appears. A floating indicator shows the points earned.',
                     ),
                   ),
                   ListTile(
@@ -476,7 +476,7 @@ class _SettingsTabState extends State<SettingsTab> {
                     leading: Icon(Icons.speed_outlined),
                     title: Text('Survive the rising pace'),
                     subtitle: Text(
-                      'Your chosen base speed is increased by 0.10x for every 500 points, up to 1.50x total. The run ends when a placed square extends above the top border.',
+                      'Your chosen base speed is increased by 0.10x for every 500 points, up to 1.50x total. Raising the base speed or earning a score-based speed increase flashes a cartoon “Speed Up” message; every 1,000 points also triggers a +1000 celebration. The run ends when a placed square extends above the top border.',
                     ),
                   ),
                   ListTile(
@@ -492,7 +492,7 @@ class _SettingsTabState extends State<SettingsTab> {
                     leading: Icon(Icons.leaderboard_outlined),
                     title: Text('Track your scores'),
                     subtitle: Text(
-                      'Score History keeps your 10 highest completed runs on this device, sorted by score. A positive current score appears as Current only when it qualifies for the top 10. Your highest score is saved separately; Clear History removes the run history but keeps your highest score.',
+                      'Score History keeps your 10 highest completed runs on this device, sorted by score. A positive current score appears as Current only when it qualifies for the top 10. Clear History removes saved runs and resets your highest score to your current game score.',
                     ),
                   ),
                   ListTile(

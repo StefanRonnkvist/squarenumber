@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:squarenumber/features/game/models/falling_square.dart';
 import 'package:squarenumber/features/game/models/floating_points.dart';
@@ -58,11 +58,13 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
   Timer? _updateTimer;
   Timer? _spawnTimer;
   Timer? _milestoneTimer;
+  Timer? _speedUpTimer;
   Timer? _topTenTimer;
   int? _topTenCelebrationPosition;
   int _score = 0;
   int _nextMilestoneScore = 1000;
   bool _showMilestoneCelebration = false;
+  bool _showSpeedUpMessage = false;
   bool _isRunning = false;
   bool _isGameOver = false;
   late double _activePreferredSquareSize;
@@ -133,6 +135,10 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
   @override
   void didUpdateWidget(covariant FallingSquaresArea oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    if (widget.speedMultiplier > oldWidget.speedMultiplier) {
+      _showSpeedUpCelebration();
+    }
 
     if (oldWidget.topTenPosition != widget.topTenPosition) {
       _topTenTimer?.cancel();
@@ -959,6 +965,7 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
     _updateTimer?.cancel();
     _spawnTimer?.cancel();
     _milestoneTimer?.cancel();
+    _speedUpTimer?.cancel();
     _topTenTimer?.cancel();
     super.dispose();
   }
@@ -1313,7 +1320,10 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
                                           'Top 10!',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
-                                            fontSize: min(_areaWidth * 0.14, 58),
+                                            fontSize: min(
+                                              _areaWidth * 0.14,
+                                              58,
+                                            ),
                                             height: 1,
                                             fontWeight: FontWeight.w900,
                                             letterSpacing: 1,
@@ -1331,7 +1341,10 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
                                         Text(
                                           '#$_topTenCelebrationPosition',
                                           style: TextStyle(
-                                            fontSize: min(_areaWidth * 0.11, 46),
+                                            fontSize: min(
+                                              _areaWidth * 0.11,
+                                              46,
+                                            ),
                                             height: 1,
                                             fontWeight: FontWeight.w900,
                                             color: const Color(0xFF5A189A),
@@ -1426,7 +1439,10 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
                                         Text(
                                           '+1000',
                                           style: TextStyle(
-                                            fontSize: min(_areaWidth * 0.16, 64),
+                                            fontSize: min(
+                                              _areaWidth * 0.16,
+                                              64,
+                                            ),
                                             height: 1,
                                             fontWeight: FontWeight.w900,
                                             letterSpacing: 1,
@@ -1446,7 +1462,106 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
                                         Text(
                                           '+1000',
                                           style: TextStyle(
-                                            fontSize: min(_areaWidth * 0.16, 64),
+                                            fontSize: min(
+                                              _areaWidth * 0.16,
+                                              64,
+                                            ),
+                                            height: 1,
+                                            fontWeight: FontWeight.w900,
+                                            letterSpacing: 1,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        if (_showSpeedUpMessage)
+                          Positioned.fill(
+                            child: IgnorePointer(
+                              child: Center(
+                                child: Transform.rotate(
+                                  angle: 0.07,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 28,
+                                      vertical: 18,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF7AE582),
+                                      border: Border.all(
+                                        color: const Color(0xFF168AAD),
+                                        width: 6,
+                                      ),
+                                      borderRadius: BorderRadius.circular(28),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color: Color(0x99000000),
+                                          blurRadius: 14,
+                                          offset: Offset(0, 7),
+                                        ),
+                                        BoxShadow(
+                                          color: Colors.white,
+                                          blurRadius: 0,
+                                          spreadRadius: 2,
+                                        ),
+                                      ],
+                                    ),
+                                    child: Stack(
+                                      clipBehavior: Clip.none,
+                                      alignment: Alignment.center,
+                                      children: [
+                                        Positioned(
+                                          top: -30,
+                                          left: -26,
+                                          child: Text(
+                                            '⚡',
+                                            style: TextStyle(
+                                              fontSize: 34,
+                                              shadows: [
+                                                Shadow(
+                                                  color: Colors.blue.shade900,
+                                                  blurRadius: 3,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          'Speed Up',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: min(
+                                              _areaWidth * 0.12,
+                                              48,
+                                            ),
+                                            height: 1,
+                                            fontWeight: FontWeight.w900,
+                                            letterSpacing: 1,
+                                            foreground: Paint()
+                                              ..style = PaintingStyle.stroke
+                                              ..strokeWidth = 7
+                                              ..color = const Color(0xFF075985),
+                                            shadows: const [
+                                              Shadow(
+                                                color: Color(0xFF075985),
+                                                blurRadius: 0,
+                                                offset: Offset(3, 5),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Text(
+                                          'Speed Up',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: min(
+                                              _areaWidth * 0.12,
+                                              48,
+                                            ),
                                             height: 1,
                                             fontWeight: FontWeight.w900,
                                             letterSpacing: 1,
@@ -1526,6 +1641,17 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
       if (!mounted) return;
       setState(() {
         _showMilestoneCelebration = false;
+      });
+    });
+  }
+
+  void _showSpeedUpCelebration() {
+    _showSpeedUpMessage = true;
+    _speedUpTimer?.cancel();
+    _speedUpTimer = Timer(const Duration(milliseconds: 1400), () {
+      if (!mounted) return;
+      setState(() {
+        _showSpeedUpMessage = false;
       });
     });
   }

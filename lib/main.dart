@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:squarenumber/app/main_app.dart';
 import 'package:squarenumber/app/splash_screen.dart';
 

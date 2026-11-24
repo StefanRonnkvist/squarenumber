@@ -8,7 +8,7 @@ Square Number is a falling-number puzzle game built with Flutter. Guide each act
 2. Clear at least two equal squares that touch at an edge or corner, or clear an orthogonally connected chain of at least three unique values where each neighboring value differs by exactly one. Consecutive chains can turn corners, but a repeated value inside a chain (for example `1-2-1`) does not count.
 3. For each matching group in a clear, calculate `(sum of values) x (number of squares in that group)`. Add those group scores together, then apply the current cascade multiplier.
 4. When a clear removes support, falling squares can settle into another clear. The multiplier starts at x1, increases after each clear in the cascade, and resets when the next square appears. Floating score indicators show the points earned by each clear.
-5. The effective speed starts at your chosen base speed, increases by `0.10x` every 500 points, and is capped at `1.50x`.
+5. The effective speed starts at your chosen base speed, increases by `0.10x` every 500 points, and is capped at `1.50x`. Each speed increase displays a cartoon-style **Speed Up** celebration; each 1,000-point milestone displays **+1000**.
 6. The run ends when a placed square extends above the top border.
 
 ## Controls And Saved Runs
@@ -19,13 +19,14 @@ Square Number is a falling-number puzzle game built with Flutter. Guide each act
 - Switching away from the game on a phone pauses an active run. Phone gameplay uses portrait orientation; changing orientation or resizing the board pauses a running game.
 - Changing either generated-number bound starts a fresh board. Base speed and theme changes apply directly.
 - Tablet and desktop layouts support portrait and landscape orientations.
-- The current positive score appears in Score History only when it qualifies for the top 10. It is marked **Current** while in progress; completed entries retain their effective speed and Phone, Tablet, or Desktop layout label. **Clear History** removes completed-run history but does not clear the separately saved highest score.
+- The current positive score appears in Score History only when it qualifies for the top 10. It is marked **Current** while in progress; completed entries retain their effective speed and Phone, Tablet, or Desktop layout label. **Clear History** removes completed-run history and resets the saved highest score to the current game score.
 
 ## Features
 
 - Two matching systems: edge-or-corner equal groups and turning orthogonal consecutive chains
 - Fixed five-column board on phone, tablet, and desktop, with square size derived from the board width
 - Cascade multipliers with floating point indicators
+- Cartoon-style celebrations for every speed increase and each 1,000-point milestone
 - Device-local highest score, paused board, and top-10 completed-run history
 - Live top-10 preview when the current score qualifies
 - Configurable base speed from `0.20x` to `1.50x`
@@ -141,8 +142,8 @@ android/gradlew.bat :app:signingReport
 
 | Target | Version |
 | --- | --- |
-| Flutter package (`pubspec.yaml`) | `0.1.64+65` |
-| MSIX package (`msix_config.msix_version`) | `0.1.64.65` |
+| Flutter package (`pubspec.yaml`) | `0.1.67+68` |
+| MSIX package (`msix_config.msix_version`) | `0.1.67.68` |
 | Android package name | `com.stefanronnkvist.paid.squarenumber` |
 
 `scripts/bump-version.ps1` updates `pubspec.yaml` and `android/local.properties`; it does not update `lib/app/app_metadata.dart` or this README. The app metadata currently reports `0.1.56+57` (`0.1.56.57` for MSIX), so its displayed diagnostic versions are out of step with the package versions above.

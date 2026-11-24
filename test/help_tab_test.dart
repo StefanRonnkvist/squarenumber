@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:squarenumber/features/settings/widgets/settings_tab.dart';
 
@@ -33,6 +33,11 @@ void main() {
     expect(find.text('Make a clear'), findsOneWidget);
     expect(find.text('Score and build cascades'), findsOneWidget);
     expect(find.text('Survive the rising pace'), findsOneWidget);
+    expect(
+      find.textContaining('cartoon “Speed Up” message'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('+1000 celebration'), findsOneWidget);
 
     await tester.dragUntilVisible(
       find.text('Track your scores'),
