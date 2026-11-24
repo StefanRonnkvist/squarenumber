@@ -142,11 +142,11 @@ android/gradlew.bat :app:signingReport
 
 | Target | Version |
 | --- | --- |
-| Flutter package (`pubspec.yaml`) | `0.1.67+68` |
-| MSIX package (`msix_config.msix_version`) | `0.1.67.68` |
+| Flutter package (`pubspec.yaml`) | `0.1.69+70` |
+| MSIX package (`msix_config.msix_version`) | `0.1.69.70` |
 | Android package name | `com.stefanronnkvist.paid.squarenumber` |
 
-`scripts/bump-version.ps1` updates `pubspec.yaml` and `android/local.properties`; it does not update `lib/app/app_metadata.dart` or this README. The app metadata currently reports `0.1.56+57` (`0.1.56.57` for MSIX), so its displayed diagnostic versions are out of step with the package versions above.
+`scripts/bump-version.ps1` updates `pubspec.yaml` and `android/local.properties`; it does not update `lib/app/app_metadata.dart` or this README. Keep the app metadata constants in `lib/app/app_metadata.dart` in sync with the package versions above; they surface in the Information tab and feedback diagnostics.
 
 ## Documentation Maintenance
 
@@ -158,7 +158,7 @@ Keep this README, the Help tab in `lib/features/settings/widgets/settings_tab.da
 pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/bump-version.ps1
 ```
 
-The version script updates `pubspec.yaml` and `android/local.properties`. Before release, manually verify the README version table, `lib/app/app_metadata.dart`, and the Google Play descriptions; the current documentation audit script targets a legacy project and must not be used as a Square Number release gate.
+The version script updates `pubspec.yaml` and `android/local.properties`. Before release, also keep the app metadata constants in `lib/app/app_metadata.dart` in sync and manually verify the README version table and the Google Play descriptions; the current documentation audit script targets a legacy project and must not be used as a Square Number release gate.
 
 ## License
 

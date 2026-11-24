@@ -1,10 +1,10 @@
 /// Build metadata shared with diagnostics and contact submissions.
 const String appPackageName = 'com.stefanronnkvist.paid.squarenumber';
-const String appVersion = '0.1.56';
-const String appBuildNumber = '57';
+const String appVersion = '0.1.69';
+const String appBuildNumber = '70';
 
 /// Android's combined semantic version and build number.
 const String appAabVersion = '$appVersion+$appBuildNumber';
 
 /// Windows Store's required four-part package version.
-const String appMsixVersion = '0.1.56.57';
+const String appMsixVersion = '0.1.69.70';
