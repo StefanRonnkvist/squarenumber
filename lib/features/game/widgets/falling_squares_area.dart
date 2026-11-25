@@ -65,6 +65,7 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
   int _nextMilestoneScore = 1000;
   bool _showMilestoneCelebration = false;
   bool _showSpeedUpMessage = false;
+  bool _speedUpMessagePending = false;
   bool _isRunning = false;
   bool _isGameOver = false;
   late double _activePreferredSquareSize;
@@ -256,6 +257,8 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
       _score = 0;
       _nextMilestoneScore = 1000;
       _showMilestoneCelebration = false;
+      _showSpeedUpMessage = false;
+      _speedUpMessagePending = false;
       _milestoneTimer?.cancel();
       _milestoneTimer = null;
       _isRunning = false;
@@ -1370,7 +1373,8 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
                         if (_showMilestoneCelebration)
                           Positioned.fill(
                             child: IgnorePointer(
-                              child: Center(
+                              child: Align(
+                                alignment: const Alignment(0, -0.25),
                                 child: Transform.rotate(
                                   angle: -0.07,
                                   child: Container(
@@ -1482,7 +1486,8 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
                         if (_showSpeedUpMessage)
                           Positioned.fill(
                             child: IgnorePointer(
-                              child: Center(
+                              child: Align(
+                                alignment: const Alignment(0, 0.3),
                                 child: Transform.rotate(
                                   angle: 0.07,
                                   child: Container(
@@ -1641,17 +1646,33 @@ class _FallingSquaresAreaState extends State<FallingSquaresArea>
       if (!mounted) return;
       setState(() {
         _showMilestoneCelebration = false;
+        // Once the +1000 message is gone, show a deferred Speed Up message
+        // so the two never overlap on screen.
+        if (_speedUpMessagePending) {
+          _speedUpMessagePending = false;
+          _showSpeedUpCelebration();
+        }
       });
     });
   }
 
   void _showSpeedUpCelebration() {
+    // Never overlap with the +1000 celebration: queue this message until the
+    // milestone banner has finished.
+    if (_showMilestoneCelebration) {
+      _speedUpMessagePending = true;
+      return;
+    }
     _showSpeedUpMessage = true;
     _speedUpTimer?.cancel();
     _speedUpTimer = Timer(const Duration(milliseconds: 1400), () {
       if (!mounted) return;
       setState(() {
         _showSpeedUpMessage = false;
+        if (_speedUpMessagePending) {
+          _speedUpMessagePending = false;
+          _showSpeedUpCelebration();
+        }
       });
     });
   }

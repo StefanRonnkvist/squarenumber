@@ -476,7 +476,7 @@ class _SettingsTabState extends State<SettingsTab> {
                     leading: Icon(Icons.speed_outlined),
                     title: Text('Survive the rising pace'),
                     subtitle: Text(
-                      'Your chosen base speed is increased by 0.10x for every 500 points, up to 1.50x total. Raising the base speed or earning a score-based speed increase flashes a cartoon “Speed Up” message; every 1,000 points also triggers a +1000 celebration. The run ends when a placed square extends above the top border.',
+                      'Your chosen base speed is increased by 0.10x for every 500 points, up to 1.50x total. Raising the base speed or earning a score-based speed increase flashes a cartoon “Speed Up” message; every 1,000 points also triggers a +1000 celebration. When both occur together, the Speed Up message waits and appears right after the +1000 celebration ends, so the two never overlap or block each other on screen. The run ends when a placed square extends above the top border.',
                     ),
                   ),
                   ListTile(
